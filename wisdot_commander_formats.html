@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WisDOT Commander Formats</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wisdot: {
+                            navy: '#003366',
+                            red: '#C8102E',
+                            dark: '#0f172a',
+                            card: '#1e293b',
+                            input: '#0b1329',
+                            hover: '#002244'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans bg-wisdot-dark text-slate-100 antialiased selection:bg-wisdot-red selection:text-white">
+
+    <!-- Header with Official WisDOT Logo Seal -->
+    <header class="bg-wisdot-card border-b border-slate-800 sticky top-0 z-30 shadow-lg">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+            
+            <!-- Branding Logo & Title -->
+            <div class="flex items-center gap-3">
+                <!-- High Fidelity Inline SVG Render of official WisDOT Seal -->
+                <div class="w-12 h-12 rounded-full bg-white p-0.5 shadow flex-shrink-0 flex items-center justify-center">
+                    <svg viewBox="0 0 500 500" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <path id="pathTop" d="M 60 250 A 190 190 0 0 1 440 250" fill="none" />
+                            <path id="pathBottom" d="M 440 250 A 190 190 0 0 1 60 250" fill="none" />
+                        </defs>
+                        <!-- Outer Border Circles -->
+                        <circle cx="250" cy="250" r="240" fill="#FFFFFF" stroke="#003366" stroke-width="12"/>
+                        <circle cx="250" cy="250" r="225" fill="none" stroke="#003366" stroke-width="4"/>
+                        <circle cx="250" cy="250" r="145" fill="none" stroke="#003366" stroke-width="5"/>
+
+                        <!-- Curved Text Top: WISCONSIN with stars -->
+                        <text font-family="Arial, sans-serif" font-weight="900" font-size="36" fill="#003366" letter-spacing="4">
+                            <textPath href="#pathTop" startOffset="50%" text-anchor="middle">
+                                ★ WISCONSIN ★
+                            </textPath>
+                        </text>
+
+                        <!-- Curved Text Bottom: DEPARTMENT OF TRANSPORTATION -->
+                        <text font-family="Arial, sans-serif" font-weight="900" font-size="25" fill="#003366" letter-spacing="1">
+                            <textPath href="#pathBottom" startOffset="50%" text-anchor="middle">
+                                DEPARTMENT OF TRANSPORTATION
+                            </textPath>
+                        </text>
+
+                        <!-- Wisconsin State Map Outline -->
+                        <path d="M 210 135 L 260 145 L 320 185 L 315 260 L 350 215 L 325 295 L 325 365 L 265 365 L 265 290 L 200 280 L 155 250 L 170 160 Z" 
+                              fill="none" stroke="#003366" stroke-width="12" stroke-linejoin="round"/>
+
+                        <!-- Red Sail/Swoosh Icon -->
+                        <path d="M 125 325 C 215 325 365 355 385 355 C 295 285 265 165 255 95 C 225 215 185 275 125 325 Z" 
+                              fill="#C8102E"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold text-white tracking-wide leading-none flex items-center gap-2">
+                        WisDOT <span class="text-xs font-medium text-slate-300">Commander Formats</span>
+                    </h1>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Department of Transportation</p>
+                </div>
+            </div>
+
+            <!-- Navigation Mode Switcher -->
+            <div class="flex bg-wisdot-input p-1 rounded-lg border border-slate-800 w-full sm:w-auto">
+                <button id="tab-quick-btn" onclick="setMode('quick')" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold rounded transition-all flex items-center justify-center gap-1.5 bg-wisdot-navy text-white shadow border border-blue-500/30">
+                    <i class="fa-solid fa-copy"></i>
+                    <span>Quick Copy</span>
+                </button>
+                <button id="tab-autofill-btn" onclick="setMode('autofill')" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold rounded transition-all flex items-center justify-center gap-1.5 text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-wand-magic-sparkles text-wisdot-red"></i>
+                    <span>Auto-Fill Builder</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-5 space-y-4">
+
+        <!-- Category Dropdown -->
+        <div class="bg-wisdot-card border border-slate-800 rounded-xl p-3 shadow-md flex flex-col sm:flex-row sm:items-center gap-3">
+            <label for="format-select" class="text-xs font-bold uppercase tracking-wider text-slate-300 shrink-0 flex items-center gap-1.5">
+                <i class="fa-solid fa-list-check text-wisdot-red"></i> Select Format:
+            </label>
+            <div class="relative w-full">
+                <select id="format-select" onchange="onFormatSelect()" class="w-full bg-wisdot-input text-white border border-slate-700 text-xs font-medium rounded-lg p-2.5 pr-8 focus:outline-none focus:border-wisdot-navy transition-all appearance-none cursor-pointer">
+                </select>
+                <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></i>
+            </div>
+        </div>
+
+        <!-- MODE 1: QUICK COPY (DEFAULT VIEW) -->
+        <div id="mode-quick-view" class="bg-wisdot-card border border-slate-800 rounded-xl p-4 shadow-md space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                <div>
+                    <h2 id="quick-format-title" class="text-sm font-bold text-white">Raw Format Template</h2>
+                    <p id="quick-format-desc" class="text-xs text-slate-400">Copy unedited raw format</p>
+                </div>
+                <button onclick="copyQuickTemplate()" class="px-4 py-2 bg-wisdot-red hover:bg-red-700 text-white font-bold text-xs rounded transition-all flex items-center gap-1.5 shadow active:scale-95">
+                    <i class="fa-solid fa-copy"></i>
+                    <span>Copy Raw Format</span>
+                </button>
+            </div>
+
+            <pre id="quick-template-box" class="w-full bg-wisdot-input font-mono text-xs text-slate-300 p-3.5 rounded border border-slate-800 overflow-x-auto whitespace-pre-wrap leading-relaxed select-all min-h-[250px]"></pre>
+        </div>
+
+        <!-- MODE 2: AUTO-FILL BUILDER -->
+        <div id="mode-autofill-view" class="hidden grid grid-cols-1 md:grid-cols-12 gap-4">
+            
+            <!-- Dynamic Fields -->
+            <div class="md:col-span-5 bg-wisdot-card border border-slate-800 rounded-xl p-4 shadow-md space-y-3">
+                <div class="border-b border-slate-800 pb-2 flex items-center justify-between">
+                    <h2 class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-pen-to-square text-wisdot-red"></i> Fill Information
+                    </h2>
+                    <button onclick="resetFields()" class="text-[11px] text-slate-400 hover:text-white transition-colors">
+                        <i class="fa-solid fa-rotate-left"></i> Reset
+                    </button>
+                </div>
+
+                <div id="builder-inputs-container" class="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+                </div>
+            </div>
+
+            <!-- Preview Output -->
+            <div class="md:col-span-7 bg-wisdot-card border border-slate-800 rounded-xl p-4 shadow-md flex flex-col justify-between space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <h2 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Live Preview</h2>
+                    </div>
+                    <button onclick="copyAutoFillOutput()" class="px-4 py-2 bg-wisdot-red hover:bg-red-700 text-white font-bold text-xs rounded transition-all flex items-center gap-1.5 shadow active:scale-95">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Copy Filled Format</span>
+                    </button>
+                </div>
+
+                <textarea id="autofill-output" readonly class="w-full h-72 bg-wisdot-input font-mono text-xs text-slate-200 p-3 rounded border border-slate-800 focus:outline-none resize-none leading-relaxed select-all"></textarea>
+
+                <div class="flex items-center justify-between text-[11px] text-slate-400">
+                    <span id="format-category-tag" class="text-blue-400 font-medium">Category</span>
+                    <span id="char-counter">0 characters</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 transform translate-y-12 opacity-0 transition-all duration-200 pointer-events-none z-50 flex items-center gap-2 bg-wisdot-navy text-white font-bold text-xs px-4 py-2.5 rounded shadow-xl border border-blue-500/40">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toast-msg">Copied to Clipboard!</span>
+    </div>
+
+    <!-- Application JavaScript -->
+    <script>
+        const formats = [
+            // MODERATION
+            {
+                id: "blacklist",
+                title: "Blacklist Format",
+                category: "Moderation",
+                raw: `.kick {User} **GVCN Department of Transportation Moderation**\n\nHello, unfortunately, you have been **Blacklisted** from the Department of Transportation for the following reason(s):\n\n{Reason}\n\nEvidence: {Evidence}\n\n**If you believe this is false, please contact lemonlover2245 for assistance!**`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "@User or User ID" },
+                    { key: "Reason", label: "Reason", type: "textarea", placeholder: "Reason for blacklist..." },
+                    { key: "Evidence", label: "Evidence", placeholder: "Evidence link / proof" }
+                ]
+            },
+            {
+                id: "termination_format",
+                title: "Termination Format",
+                category: "Moderation",
+                raw: `.kick {User} **GVCN Department of Transportation Moderation**\n\nHello, unfortunately, you have been **Terminated** from the Department of Transportation for the following reason(s):\n\n{Reason}\n\nEvidence: {Evidence}\nTermination Offence: {Offence}\n\nIf you believe this is false, please contact Monyman6098 for assistance!\n\n**Reminder:** If you reapply and get terminated again, you will receive a **Department Blacklist**`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "<UserID>" },
+                    { key: "Reason", label: "Reason", type: "textarea", placeholder: "Termination offence reason..." },
+                    { key: "Evidence", label: "Evidence", placeholder: "Evidence link" },
+                    { key: "Offence", label: "Offence Count", placeholder: "1/2" }
+                ]
+            },
+            {
+                id: "kick_format",
+                title: "Kick Format",
+                category: "Moderation",
+                raw: `.kick {User} No longer employed with P/S.`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "@User or User ID" }
+                ]
+            },
+
+            // APPLICATIONS & REINSTATEMENTS
+            {
+                id: "app_pass",
+                title: "Application Pass Format",
+                category: "Applications",
+                raw: `# **GVCN Department of Transportation Application Results**\n\nHello <@{User}>! I am {YourName}, and I am here to show you your results! You have **PASSED** your WisDOT Application! Congratulations, here are your next steps.\n\n**__1.__** Join the P/S server using the link below.  \n**__2.__** Make a Role Request (screenshot this message and use it for your request).  \n**__3.__** Wait for a Supervisor+ to accept your role request, then you will be told what to do next.\n\nHere is the P/S Server Link: https://discord.gg/nKUZetHCSs  \n**Leaking this will result in moderation action.**\n\n***If you have any questions, feel free to reach out!***`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" },
+                    { key: "YourName", label: "Your Name", placeholder: "Your Username" }
+                ]
+            },
+            {
+                id: "app_deny",
+                title: "Application Deny Format",
+                category: "Applications",
+                raw: `# **GVCN Department of Transportation Application Results**\n\nHello <@{User}>! I am {YourName}, and I am here to show you your results! Unfortunately, you have **FAILED** your WisDOT Application.\n\n**Here is the reason you failed:**\n{Reason}\n\n***We hope that you reapply! Please note, this will not affect you in any way if you eventually pass the application.***`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" },
+                    { key: "YourName", label: "Your Name", placeholder: "Your Username" },
+                    { key: "Reason", label: "Reason", type: "textarea", placeholder: "Reason for failure..." }
+                ]
+            },
+            {
+                id: "reinstatement_format",
+                title: "Reinstatement Format",
+                category: "Applications",
+                raw: `# GVCN Department of Transportation Reinstatement\n\n> Hello <@{User}>! You may join the server using the link below. Please follow these steps once you join:\n\n> • Screenshot this message and use it to create a Role Request.  \n> • Wait for a Commander+ to accept your request.\n\n> Server Link: https://discord.gg/nKUZetHCSs\n-# Leaking this link to others will result in moderation actions.\n\n**Rank you will be given:** {RankGiven}\n\n***Signed,  \n{YourName}, {YourRank}***`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" },
+                    { key: "RankGiven", label: "Rank Given", placeholder: "Assigned Rank" },
+                    { key: "YourName", label: "Your Name", placeholder: "Your Name" },
+                    { key: "YourRank", label: "Your Rank", placeholder: "Your Rank" }
+                ]
+            },
+            {
+                id: "handpick_format",
+                title: "Handpick Format",
+                category: "Applications",
+                raw: `# GVCN Department of Transportation Hand-Pick\n> Hello <@{User}>! You have been hand-picked to join the Department of Transportation. Please use the link below to join the server and follow the steps provided **IF** you accept.\n\n> Screenshot this message and use it to create a Role Request.\n> Wait for a Commander+ to review and accept your request.\n\n> Server Link: Will be sent if accepted\n-# Leaking this link to others will result in moderation actions.\n\n**Quota: {Quota}**\n**Position you are being hand-picked for: {Position}**\n***Signed,***\n***__{YourRank}, {YourName}__***`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" },
+                    { key: "Quota", label: "Quota", default: "1.5 Hours" },
+                    { key: "Position", label: "Position", placeholder: "Target Rank / Position" },
+                    { key: "YourName", label: "Your Name", placeholder: "Your Name" },
+                    { key: "YourRank", label: "Your Rank", placeholder: "Your Rank" }
+                ]
+            },
+
+            // FASTPASS
+            {
+                id: "fastpass_accept",
+                title: "Fastpass Accept Format",
+                category: "Fastpass",
+                raw: `:DOT: **| Hello <@{User}>, your Fastpass has been accepted. Please refer to DMs for your next steps.**`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" }
+                ]
+            },
+            {
+                id: "fastpass_deny",
+                title: "Fastpass Deny Format",
+                category: "Fastpass",
+                raw: `:WisDOT~1: **| Hello <@{User}>, your Fastpass has been denied for the following reason(s):** {Reason}`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" },
+                    { key: "Reason", label: "Reason", type: "textarea", placeholder: "Reason for denial..." }
+                ]
+            },
+            {
+                id: "fastpass_questions",
+                title: "Fastpass Questions Format",
+                category: "Fastpass",
+                raw: `# **GVCN Department of Transportation Fastpass Questions**\n\n> Hello <@{User}>! Your Fastpass has been accepted, but now we are going to ask you a few simple questions before you are 100% in the Department!\n\n**Requirements**\n> - You must have at least 2 or more sentences on each question.  \n> - You must try on each question, or this will be denied.\n\nYou may ping me once you are done.\n\n**__Question 1:__** How would you respond to a broken traffic light?  \n**__Question 2:__** How would you say you are starting your shift and ending your shift within RTO?  \n**__Question 3:__** How do you request backup? (You do not need to meet the 2 sentence requirement on this question.)  \n**__Question 4:__** How would you tow a car? **Start - Finish**`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" }
+                ]
+            },
+            {
+                id: "fastpass_res_pass",
+                title: "Question Results PASS Format",
+                category: "Fastpass",
+                raw: `# **GVCN Department of Transportation Fastpass Results**\n\n> Hello <@{User}>, you have been **accepted**! You are officially a part of the GVCN Department of Transportation!\n\n**Next Steps:**\n> **1. Join the P/S server**  \n> **2. Make a role request**  \n> **3. Wait for a Supervisor+ to accept it**  \n> **4. Read all documents and information, then patrol!**\n\nP/S Server Link: https://discord.gg/nKUZetHCSs  \n*Leaking any of this will result in a DOT Blacklist*\n\n***Signed,  \n{YourName}, {YourRank}***`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" },
+                    { key: "YourName", label: "Your Name", placeholder: "Your Name" },
+                    { key: "YourRank", label: "Your Rank", placeholder: "Your Rank" }
+                ]
+            },
+            {
+                id: "fastpass_res_fail",
+                title: "Question Results FAIL Format",
+                category: "Fastpass",
+                raw: `# **GVCN Department of Transportation Fastpass Results**\n\n> Hello <@{User}>, I am sorry to inform you that your DOT Fastpass has been denied.\n\n> **Reason:** {Reason}\n\n***Signed,  \n{YourName}, {YourRank}***`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" },
+                    { key: "Reason", label: "Reason", type: "textarea", placeholder: "Reason for failure..." },
+                    { key: "YourName", label: "Your Name", placeholder: "Your Name" },
+                    { key: "YourRank", label: "Your Rank", placeholder: "Your Rank" }
+                ]
+            },
+
+            // WELCOME MESSAGES
+            {
+                id: "gen_welcome",
+                title: "General Welcome Message",
+                category: "Welcome Messages",
+                raw: `Hello <@{User}>! Welcome to the Department of Transportation! Make sure you read **ALL** information in https://discord.com/channels/1397366518446034974/1481174324483457125 before going on patrol!\n-# Please make a Roleplay Name request in #requests. Please include your timezone when you make the request.`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" }
+                ]
+            },
+            {
+                id: "app_welcome",
+                title: "Application Welcome Message",
+                category: "Welcome Messages",
+                raw: `Hello <@{User}>! Congratulations on passing your WisDOT application! Starting today, you have 2 weeks to either get trained or take the exam. Please let us know which option you are choosing!`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" }
+                ]
+            },
+            {
+                id: "reinstatement_welcome",
+                title: "Reinstatement Welcome Message",
+                category: "Welcome Messages",
+                raw: `Hello <@{User}>, we are glad to have you back! Make sure you read all information in https://discord.com/channels/1397366518446034974/1481174324483457125 before going on patrol!\n-# Please make a Roleplay Name request in #requests. Please include your timezone when you make the request.`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" }
+                ]
+            },
+            {
+                id: "div_welcome",
+                title: "Division Welcome Message",
+                category: "Welcome Messages",
+                raw: `Hello <@{User}>! Congrats on passing your Division Application! Before going on patrol for this division, please read <#1529966242528759990> for your division section.`,
+                fields: [
+                    { key: "User", label: "User / User ID", placeholder: "User ID or Mention" }
+                ]
+            },
+
+            // BATCH & QUOTA
+            {
+                id: "quota_check",
+                title: "Quota Check Format",
+                category: "Batch & Quota",
+                raw: `## :WisDOT: **| GVCN Department of Transportation Mid Month/Monthly Quota Checks**\n> **Notes:** \n> **CC:** @Department of Transportation \n> **Operator of the Month:** {OperatorOfMonth}\n\n**Users who PASSED quota:** \n{Passed}\n\n**Users who FAILED quota:**\n{Failed}\n\n**Employee Adjustments:**\n{Adjustments}\n\n***Signed, \nDepartment of Transportation, High Command Team***`,
+                fields: [
+                    { key: "OperatorOfMonth", label: "Operator of the Month", placeholder: "@User" },
+                    { key: "Passed", label: "Passed Users List", type: "textarea", default: "> - (User)" },
+                    { key: "Failed", label: "Failed Users List", type: "textarea", default: "> - (User)" },
+                    { key: "Adjustments", label: "Adjustments List", type: "textarea", default: "> - (User) -> (Rank)" }
+                ]
+            },
+            {
+                id: "div_app_results",
+                title: "Division Application Results",
+                category: "Batch & Quota",
+                raw: `## :WisDOT: **| GVCN {DivisionName} Division Application Results** \n> Here are the results for this batch of applications. \n\n**Users that have PASSED the Application**\n{Passed}\n\n** Roles will be added soon!**\n\n**Users that have FAILED the Application** \n{Failed}\n\n**Reasons you may not have passed** \n> - Bad Grammar or Spelling\n> - Poor Application\n> - AI Generated Responses \n> -# Please note there could be other reasons and we are not saying that you used AI or anything on your Application.`,
+                fields: [
+                    { key: "DivisionName", label: "Division Name", placeholder: "e.g. Incident Management" },
+                    { key: "Passed", label: "Passed Users List", type: "textarea", default: "> - *(@User)*\n> -# (Notes)" },
+                    { key: "Failed", label: "Failed Users List", type: "textarea", default: "> - *(@User)*\n> -# (Notes)" }
+                ]
+            },
+            {
+                id: "exam_results",
+                title: "Exam Results Format",
+                category: "Batch & Quota",
+                raw: `## :WisDOT: **| GVCN WisDOT Cadet Exam Results** \n> Here are the results for this batch of exams. \n\n**Users that have PASSED the exam**\n{Passed}\n\n** Roles will be added soon!**\n\n**Users that have FAILED the exam** \n{Failed}\n\n**Reasons you may not have passed** \n> - Bad Grammar or Spelling\n> - Poor Application\n> - AI Generated Responses \n> -# Please note there could be other reasons and we are not saying that you used AI or anything on your Exam.`,
+                fields: [
+                    { key: "Passed", label: "Passed Users List", type: "textarea", default: "> - *(@User)*\n> -# (Notes)" },
+                    { key: "Failed", label: "Failed Users List", type: "textarea", default: "> - *(@User)*\n> -# (Notes)" }
+                ]
+            }
+        ];
+
+        let currentMode = 'quick';
+
+        window.onload = function() {
+            buildDropdown();
+            onFormatSelect();
+        };
+
+        function buildDropdown() {
+            const select = document.getElementById('format-select');
+            select.innerHTML = '';
+
+            const categories = [...new Set(formats.map(f => f.category))];
+
+            categories.forEach(cat => {
+                const group = document.createElement('optgroup');
+                group.label = `--- ${cat.toUpperCase()} ---`;
+
+                formats.filter(f => f.category === cat).forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.id;
+                    opt.textContent = item.title;
+                    group.appendChild(opt);
+                });
+
+                select.appendChild(group);
+            });
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            const quickView = document.getElementById('mode-quick-view');
+            const autofillView = document.getElementById('mode-autofill-view');
+            const quickBtn = document.getElementById('tab-quick-btn');
+            const autofillBtn = document.getElementById('tab-autofill-btn');
+
+            if (mode === 'quick') {
+                quickView.classList.remove('hidden');
+                autofillView.classList.add('hidden');
+                quickBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold rounded transition-all flex items-center justify-center gap-1.5 bg-wisdot-navy text-white shadow border border-blue-500/30";
+                autofillBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold rounded transition-all flex items-center justify-center gap-1.5 text-slate-400 hover:text-white";
+            } else {
+                quickView.classList.add('hidden');
+                autofillView.classList.remove('hidden');
+                autofillBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold rounded transition-all flex items-center justify-center gap-1.5 bg-wisdot-navy text-white shadow border border-blue-500/30";
+                quickBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold rounded transition-all flex items-center justify-center gap-1.5 text-slate-400 hover:text-white";
+            }
+
+            onFormatSelect();
+        }
+
+        function onFormatSelect() {
+            const selectedId = document.getElementById('format-select').value;
+            const item = formats.find(f => f.id === selectedId);
+            if (!item) return;
+
+            document.getElementById('format-category-tag').textContent = `Category: ${item.category}`;
+
+            if (currentMode === 'quick') {
+                document.getElementById('quick-format-title').textContent = item.title;
+                document.getElementById('quick-template-box').textContent = item.raw;
+            } else {
+                renderBuilderFields(item);
+                updateBuilderOutput();
+            }
+        }
+
+        function renderBuilderFields(item) {
+            const container = document.getElementById('builder-inputs-container');
+            container.innerHTML = '';
+
+            item.fields.forEach(field => {
+                const wrapper = document.createElement('div');
+                wrapper.className = "space-y-1";
+
+                const label = document.createElement('label');
+                label.className = "block text-[11px] font-semibold text-slate-300";
+                label.textContent = field.label;
+
+                let inputEl;
+                if (field.type === 'textarea') {
+                    inputEl = document.createElement('textarea');
+                    inputEl.rows = 3;
+                    inputEl.className = "w-full bg-wisdot-input border border-slate-800 text-slate-100 text-xs rounded p-2 focus:outline-none focus:border-blue-500 transition-all font-mono resize-y";
+                } else {
+                    inputEl = document.createElement('input');
+                    inputEl.type = 'text';
+                    inputEl.className = "w-full bg-wisdot-input border border-slate-800 text-slate-100 text-xs rounded p-2 focus:outline-none focus:border-blue-500 transition-all";
+                }
+
+                inputEl.placeholder = field.placeholder || '';
+                inputEl.value = field.default || '';
+                inputEl.dataset.key = field.key;
+                inputEl.oninput = updateBuilderOutput;
+
+                wrapper.appendChild(label);
+                wrapper.appendChild(inputEl);
+                container.appendChild(wrapper);
+            });
+        }
+
+        function updateBuilderOutput() {
+            const selectedId = document.getElementById('format-select').value;
+            const item = formats.find(f => f.id === selectedId);
+            if (!item) return;
+
+            let text = item.raw;
+            const inputs = document.querySelectorAll('#builder-inputs-container [data-key]');
+
+            inputs.forEach(input => {
+                const key = input.dataset.key;
+                const val = input.value.trim() || `[${key}]`;
+                const regex = new RegExp(`\\{${key}\\}`, 'g');
+                text = text.replace(regex, val);
+            });
+
+            const output = document.getElementById('autofill-output');
+            output.value = text;
+            document.getElementById('char-counter').textContent = `${text.length} characters`;
+        }
+
+        function resetFields() {
+            onFormatSelect();
+            showToast("Inputs reset.");
+        }
+
+        function copyQuickTemplate() {
+            const text = document.getElementById('quick-template-box').textContent;
+            copyText(text, "Raw format copied!");
+        }
+
+        function copyAutoFillOutput() {
+            const text = document.getElementById('autofill-output').value;
+            copyText(text, "Filled format copied!");
+        }
+
+        function copyText(text, message) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => showToast(message)).catch(() => fallbackCopy(text, message));
+            } else {
+                fallbackCopy(text, message);
+            }
+        }
+
+        function fallbackCopy(text, message) {
+            const el = document.createElement("textarea");
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            try {
+                document.execCommand('copy');
+                showToast(message);
+            } catch (err) {
+                showToast("Failed to copy");
+            }
+            document.body.removeChild(el);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+
+            toast.classList.remove('translate-y-12', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-12', 'opacity-0');
+            }, 1800);
+        }
+    </script>
+</body>
+</html>
